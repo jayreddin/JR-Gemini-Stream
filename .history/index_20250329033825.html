@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1a1a1a">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gemini Live</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -38,12 +37,7 @@
         </div>
         <div id="modelBanner" class="model-banner"></div>
         
-        <div id="chatHistory" class="chat-history"></div>
-        <canvas id="visualizer" class="visualizer"></canvas>
-        <div id="cameraPreview" class="camera-preview"></div>
-        <div id="screenPreview" class="screen-preview"></div>
-        
-        <!-- Control panel for buttons (will be visible on mobile) -->
+        <!-- Control panel for buttons -->
         <div class="control-panel">
             <button id="cameraBtn" class="camera-btn" title="Toggle camera">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -68,6 +62,10 @@
             </button>
         </div>
         
+        <div id="chatHistory" class="chat-history"></div>
+        <canvas id="visualizer" class="visualizer"></canvas>
+        <div id="cameraPreview" class="camera-preview"></div>
+        <div id="screenPreview" class="screen-preview"></div>
         <div class="text-input-container">
             <input type="text" id="messageInput" placeholder="Type your message..." class="text-input">
             <button id="sendBtn" class="send-btn" title="Send message">

@@ -1,0 +1,488 @@
+:root {
+    --bg-color: #1a1a1a;
+    --button-bg: #2d2d2d;
+    --button-hover: #3d3d3d;
+    --text-color: #ffffff;
+    --accent-color: #4CAF50;
+    --danger-color: #ff4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Redesign header controls to fix spacing and overlapping */
+.header-controls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 20px; /* Increased from 15px to 20px */
+    z-index: 1000;
+    width: calc(100% - 100px); /* Make room for the settings button */
+    align-items: center;
+}
+
+.new-chat-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: var(--button-bg);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.new-chat-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+/* Style all SVG icons in buttons */
+button svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Adjust settings button positioning to prevent overlap */
+.settings-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    margin-left: auto; /* Push to the right */
+}
+
+.settings-btn:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+}
+
+/* Update disconnect and connect button styles */
+.disconnect-btn, .connect-btn {
+    position: static;
+    padding: 10px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--button-bg);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.disconnect-btn {
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+.disconnect-btn:hover {
+    background-color: var(--danger-color);
+    color: var(--text-color);
+    transform: scale(1.05);
+}
+
+.connect-btn {
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+
+.connect-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    transform: scale(1.05);
+}
+
+.mic-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--button-bg);
+    border: 2px solid var(--accent-color);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+    position: absolute;
+    bottom: 22px;
+    right: 25px;
+}
+
+.camera-btn,
+.screen-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--button-bg);
+    border: 2px solid var(--accent-color);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+    position: absolute;
+    right: 25px;
+}
+
+.camera-btn {
+    bottom: 142px;
+}
+
+.screen-btn {
+    bottom: 82px;
+}
+
+.camera-btn:hover,
+.screen-btn:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+}
+
+.camera-btn.active,
+.screen-btn.active,
+.mic-btn.active {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 5px var(--accent-color);
+    }
+    50% {
+        box-shadow: 0 0 15px var(--accent-color);
+    }
+    100% {
+        box-shadow: 0 0 5px var(--accent-color);
+    }
+}
+
+.model-banner {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--text-color);
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    z-index: 100;
+}
+
+/* Mobile layout improvements */
+@media screen and (max-width: 768px) {
+    /* Header controls for mobile */
+    .header-controls {
+        top: 15px;
+        left: 15px;
+        flex-wrap: wrap;
+        gap: 15px;
+        max-width: calc(100% - 70px); /* Leave space for settings button */
+    }
+    
+    /* Ensure new chat and disconnect buttons don't overlap */
+    .new-chat-btn {
+        font-size: 13px;
+        padding: 8px 12px;
+        margin-right: 5px;
+    }
+    
+    .disconnect-btn, .connect-btn {
+        margin-left: 0;
+    }
+    
+    .settings-btn {
+        top: 15px;
+        right: 15px;
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+    }
+    
+    /* Control panel styling */
+    .control-panel {
+        position: fixed;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        padding: 10px;
+        z-index: 10;
+    }
+    
+    /* Adjust positioned buttons for mobile */
+    .mic-btn, .camera-btn, .screen-btn {
+        position: static;
+        width: 50px;
+        height: 50px;
+    }
+    
+    /* Model banner positioning for mobile */
+    .model-banner {
+        top: 75px;
+        left: 15px;
+        font-size: 11px;
+    }
+    
+    /* Settings dialog for mobile */
+    .settings-dialog {
+        width: 95%;
+        max-height: 85vh;
+    }
+    
+    /* Camera preview adjustments for mobile */
+    .camera-preview, .screen-preview {
+        position: fixed;
+        bottom: auto;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 300px;
+        z-index: 5;
+    }
+    
+    /* Chat history adjustments for mobile */
+    .chat-history {
+        top: 130px;
+    }
+    
+    /* Text input container for mobile */
+    .text-input-container {
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+    }
+}
+
+.mic-btn:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+}
+
+.mic-btn.active {
+    background-color: var(--accent-color);
+}
+
+.mic-icon {
+    font-size: 16px;
+}
+
+.text-input-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 100px; /* Leave space for mic button */
+    display: flex;
+    gap: 10px;
+    z-index: 2;
+}
+
+.text-input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent-color);
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    font-size: 16px;
+    outline: none;
+}
+
+.text-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: var(--button-bg);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.send-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+.visualizer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    z-index: 1;
+}
+
+.camera-preview {
+    position: absolute;
+    bottom: 100px;
+    left: 20px;
+    width: 240px; /* Default width */
+    height: 180px;
+    background-color: var(--button-bg);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 2;
+    display: none; /* Hidden by default */
+}
+
+.camera-preview video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.screen-preview {
+    position: absolute;
+    bottom: 300px;
+    left: 20px;
+    width: 240px;
+    height: 135px; /* 16:9 aspect ratio */
+    background-color: var(--button-bg);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 2;
+    display: none; /* Hidden by default */
+}
+
+.screen-preview video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Maintain aspect ratio without cropping */
+}
+
+/* Media query for devices with width less than 340px */
+@media (max-width: 340px) {
+    .camera-preview {
+        width: 180px;
+        right: 25px;
+    }
+    .screen-preview {
+        width: 180px;
+        height: 101px; /* Maintain 16:9 aspect ratio */
+    }
+}
+
+.camera-switch-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    z-index: 1000;
+    transition: background-color 0.2s;
+}
+
+.camera-switch-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+/* Hide on desktop */
+@media (hover: hover) and (pointer: fine) {
+    .camera-switch-btn {
+        display: none;
+    }
+}
+
+/* Additional fixes for very small screens */
+@media screen and (max-width: 480px) {
+    .header-controls {
+        gap: 10px;
+        top: 10px;
+        left: 10px;
+    }
+    
+    .disconnect-btn, .connect-btn, .new-chat-btn {
+        padding: 6px;
+    }
+    
+    .new-chat-btn {
+        padding: 6px 10px;
+    }
+    
+    .new-chat-btn span {
+        display: none; /* Hide "New Chat" text on very small screens */
+    }
+    
+    .settings-btn {
+        top: 10px;
+        right: 10px;
+        width: 38px;
+        height: 38px;
+    }
+    
+    .model-banner {
+        top: 60px;
+    }
+    
+    /* Adjust chat history for smaller screens */
+    .chat-history {
+        top: 110px;
+    }
+}

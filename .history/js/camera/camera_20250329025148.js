@@ -114,8 +114,8 @@ export class CameraManager {
             // Build constraints based on platform
             const constraints = {
                 video: {
-                    width: { ideal: this.isMobileDevice ? 1280 : 1920 }, // Lower resolution on mobile
-                    height: { ideal: this.isMobileDevice ? 720 : 1080 }
+                    width: { ideal: 1920 }, // Request max quality first
+                    height: { ideal: 1080 }
                 }
             };
 
@@ -136,10 +136,7 @@ export class CameraManager {
             this.videoElement.muted = true; // Prevent feedback
             this.videoElement.setAttribute('playsinline', ''); // For iOS Safari
             this.videoElement.setAttribute('webkit-playsinline', ''); // For older iOS
-
-            // Create canvas early to avoid layout thrashing
-            this.canvas = document.createElement('canvas');
-
+            
             // Add video to preview container
             const previewContainer = document.getElementById('cameraPreview');
             if (previewContainer) {
@@ -147,19 +144,10 @@ export class CameraManager {
                 previewContainer.appendChild(this.videoElement);
                 this.previewContainer = previewContainer;
                 this._createSwitchButton(); // Add switch button
+                this.showPreview(); // Show preview when initialized
             }
-
-            // Create a promise that resolves when video can play
-            const playPromise = new Promise(resolve => {
-                this.videoElement.onloadedmetadata = () => {
-                    this.videoElement.play().then(resolve);
-                };
-            });
-
-            await playPromise;
-
-            // Show preview after video starts playing
-            this.showPreview();
+            
+            await this.videoElement.play();
 
             // Get the actual video dimensions
             const videoWidth = this.videoElement.videoWidth;
@@ -167,16 +155,14 @@ export class CameraManager {
             this.aspectRatio = videoHeight / videoWidth;
 
             // Calculate canvas size maintaining aspect ratio
-            const canvasWidth = parseInt(this.config.width);
-            const canvasHeight = Math.round(canvasWidth * this.aspectRatio);
+            const canvasWidth = this.config.width;
+            const canvasHeight = Math.round(this.config.width * this.aspectRatio);
 
-            // Set canvas dimensions
+            // Create canvas for image processing
+            this.canvas = document.createElement('canvas');
             this.canvas.width = canvasWidth;
             this.canvas.height = canvasHeight;
-            this.ctx = this.canvas.getContext('2d', {
-                alpha: false, // Optimization: no transparency needed
-                willReadFrequently: false // Hint for performance
-            });
+            this.ctx = this.canvas.getContext('2d');
 
             this.isInitialized = true;
         } catch (error) {
@@ -207,28 +193,16 @@ export class CameraManager {
             throw new Error('Camera not initialized. Call initialize() first.');
         }
 
-        // Use requestAnimationFrame for better performance
-        return new Promise(resolve => {
-            requestAnimationFrame(() => {
-                // Draw current video frame to canvas, maintaining aspect ratio
-                this.ctx.drawImage(
-                    this.videoElement,
-                    0, 0,
-                    this.canvas.width,
-                    this.canvas.height
-                );
+        // Draw current video frame to canvas, maintaining aspect ratio
+        this.ctx.drawImage(
+            this.videoElement,
+            0, 0,
+            this.canvas.width,
+            this.canvas.height
+        );
 
-                // Convert to base64 JPEG with specified quality
-                // Use a more efficient approach for mobile
-                if (this.isMobileDevice) {
-                    // Lower quality on mobile for better performance
-                    const mobileQuality = Math.min(this.config.quality, 0.7);
-                    resolve(this.canvas.toDataURL('image/jpeg', mobileQuality).split(',')[1]);
-                } else {
-                    resolve(this.canvas.toDataURL('image/jpeg', this.config.quality).split(',')[1]);
-                }
-            });
-        });
+        // Convert to base64 JPEG with specified quality
+        return this.canvas.toDataURL('image/jpeg', this.config.quality).split(',')[1];
     }
 
     /**

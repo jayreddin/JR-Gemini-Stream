@@ -172,7 +172,7 @@ class SettingsManager {
         this.elements.harassmentValue.textContent = this.getThresholdLabel(this.elements.harassmentInput.value);
         this.elements.dangerousValue.textContent = this.getThresholdLabel(this.elements.dangerousInput.value);
         this.elements.sexualValue.textContent = this.getThresholdLabel(this.elements.sexualInput.value);
-        this.elements.hateSpeechValue.textContent = this.getThresholdLabel(this.elements.hateSpeechInput.value); // Corrected ID
+        this.elements.civicValue.textContent = this.getThresholdLabel(this.elements.civicInput.value);
     }
 
     getThresholdLabel(value) {

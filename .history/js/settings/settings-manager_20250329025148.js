@@ -53,13 +53,13 @@ class SettingsManager {
             safetyToggle: this.dialog.querySelector('#safetyToggle'),
             safetyContent: this.dialog.querySelector('#safetyToggle + .collapsible-content'),
             harassmentInput: this.dialog.querySelector('#harassmentThreshold'),
-            harassmentValue: this.dialog.querySelector('#harassmentThresholdValue'), // Corrected ID
+            harassmentValue: this.dialog.querySelector('#harassmentValue'),
             dangerousInput: this.dialog.querySelector('#dangerousContentThreshold'),
-            dangerousValue: this.dialog.querySelector('#dangerousContentThresholdValue'), // Corrected ID
+            dangerousValue: this.dialog.querySelector('#dangerousValue'),
             sexualInput: this.dialog.querySelector('#sexuallyExplicitThreshold'),
-            sexualValue: this.dialog.querySelector('#sexuallyExplicitThresholdValue'), // Corrected ID
-            hateSpeechInput: this.dialog.querySelector('#hateSpeechThreshold'), // Corrected ID
-            hateSpeechValue: this.dialog.querySelector('#hateSpeechThresholdValue'), // Corrected ID
+            sexualValue: this.dialog.querySelector('#sexualValue'),
+            civicInput: this.dialog.querySelector('#civicIntegrityThreshold'),
+            civicValue: this.dialog.querySelector('#civicValue'),
             saveBtn: this.dialog.querySelector('#settingsSaveBtn')
         };
     }
@@ -99,7 +99,7 @@ class SettingsManager {
         const inputElements = [
             'sampleRateInput', 'temperatureInput', 'topPInput', 'topKInput',
             'fpsInput', 'resizeWidthInput', 'qualityInput', 'harassmentInput',
-            'dangerousInput', 'sexualInput', 'hateSpeechInput' // Corrected ID
+            'dangerousInput', 'sexualInput', 'civicInput'
         ];
 
         inputElements.forEach(elementName => {
@@ -128,7 +128,7 @@ class SettingsManager {
         this.elements.harassmentInput.value = localStorage.getItem('harassmentThreshold') || '3';
         this.elements.dangerousInput.value = localStorage.getItem('dangerousContentThreshold') || '3';
         this.elements.sexualInput.value = localStorage.getItem('sexuallyExplicitThreshold') || '3';
-        this.elements.hateSpeechInput.value = localStorage.getItem('hateSpeechThreshold') || '3'; // Corrected ID
+        this.elements.civicInput.value = localStorage.getItem('civicIntegrityThreshold') || '3';
 
         this.updateDisplayValues();
     }
@@ -153,7 +153,7 @@ class SettingsManager {
         localStorage.setItem('harassmentThreshold', this.elements.harassmentInput.value);
         localStorage.setItem('dangerousContentThreshold', this.elements.dangerousInput.value);
         localStorage.setItem('sexuallyExplicitThreshold', this.elements.sexualInput.value);
-        localStorage.setItem('hateSpeechThreshold', this.elements.hateSpeechInput.value); // Corrected ID
+        localStorage.setItem('civicIntegrityThreshold', this.elements.civicInput.value);
         
         // Update model banner if imported
         if (typeof updateModelBanner === 'function') {
@@ -172,7 +172,7 @@ class SettingsManager {
         this.elements.harassmentValue.textContent = this.getThresholdLabel(this.elements.harassmentInput.value);
         this.elements.dangerousValue.textContent = this.getThresholdLabel(this.elements.dangerousInput.value);
         this.elements.sexualValue.textContent = this.getThresholdLabel(this.elements.sexualInput.value);
-        this.elements.hateSpeechValue.textContent = this.getThresholdLabel(this.elements.hateSpeechInput.value); // Corrected ID
+        this.elements.civicValue.textContent = this.getThresholdLabel(this.elements.civicInput.value);
     }
 
     getThresholdLabel(value) {

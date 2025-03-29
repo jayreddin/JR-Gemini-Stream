@@ -1,4 +1,4 @@
-export const settingsTemplate = `
+export const settingsTemplate = 
 <div class="settings-group">
     <label for="apiKey">Gemini API Key</label>
     <input type="password" id="apiKey" placeholder="Enter your Gemini API key">
@@ -12,9 +12,10 @@ export const settingsTemplate = `
 <div class="settings-group">
     <label for="modelType">Gemini Model</label>
     <select id="modelType">
-        <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
-        <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest</option>
-        <option value="gemini-1.0-pro">gemini-1.0-pro</option>
+        <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+        <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+        <option value="gemini-pro">gemini-pro</option>
+        <option value="gemini-pro-vision">gemini-pro-vision</option>
     </select>
 </div>
 
@@ -36,14 +37,14 @@ export const settingsTemplate = `
 </div>
 
 <div class="settings-group">
-    <div class="collapsible" id="systemInstructionsToggle" role="button" aria-expanded="false">System Instructions ▼</div>
+    <div class="collapsible" id="systemInstructionsToggle">System Instructions ▼</div>
     <div class="collapsible-content">
         <textarea id="systemInstructions" rows="4" placeholder="Enter system instructions"></textarea>
     </div>
 </div>
 
 <div class="settings-group">
-    <div class="collapsible" id="screenCameraToggle" role="button" aria-expanded="false">Screen&amp;Camera ▼</div>
+    <div class="collapsible" id="screenCameraToggle">Screen&Camera ▼</div>
     <div class="collapsible-content">
         <div class="settings-group">
             <label for="fps">FPS (1-10)</label>
@@ -64,7 +65,7 @@ export const settingsTemplate = `
 </div>
 
 <div class="settings-group">
-    <div class="collapsible" id="advancedToggle" role="button" aria-expanded="false">Advanced Settings ▼</div>
+    <div class="collapsible" id="advancedToggle">Advanced Settings ▼</div>
     <div class="collapsible-content">
         <div class="settings-group">
             <label for="temperature">Temperature (0-2)</label>
@@ -85,27 +86,27 @@ export const settingsTemplate = `
 </div>
 
 <div class="settings-group">
-    <div class="collapsible" id="safetyToggle" role="button" aria-expanded="false">Safety Settings (Blocking Strength) ▼</div>
+    <div class="collapsible" id="safetyToggle">Safety Settings (Blocking Strength) ▼</div>
     <div class="collapsible-content">
         <div class="settings-group">
             <label for="harassmentThreshold">Harassment (0-3)</label>
             <input type="range" id="harassmentThreshold" min="0" max="3" step="1">
-            <span id="harassmentThresholdValue"></span>
+            <span id="harassmentValue"></span>
         </div>
         <div class="settings-group">
             <label for="dangerousContentThreshold">Dangerous Content (0-3)</label>
             <input type="range" id="dangerousContentThreshold" min="0" max="3" step="1">
-            <span id="dangerousContentThresholdValue"></span>
+            <span id="dangerousValue"></span>
         </div>
         <div class="settings-group">
             <label for="sexuallyExplicitThreshold">Sexually Explicit (0-3)</label>
             <input type="range" id="sexuallyExplicitThreshold" min="0" max="3" step="1">
-            <span id="sexuallyExplicitThresholdValue"></span>
+            <span id="sexualValue"></span>
         </div>
         <div class="settings-group">
-            <label for="hateSpeechThreshold">Hate Speech (0-3)</label>
-            <input type="range" id="hateSpeechThreshold" min="0" max="3" step="1">
-            <span id="hateSpeechThresholdValue"></span>
+            <label for="civicIntegrityThreshold">Civic Integrity (0-3)</label>
+            <input type="range" id="civicIntegrityThreshold" min="0" max="3" step="1">
+            <span id="civicValue"></span>
         </div>
     </div>
 </div>

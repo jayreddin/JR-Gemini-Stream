@@ -128,7 +128,7 @@ class SettingsManager {
         this.elements.harassmentInput.value = localStorage.getItem('harassmentThreshold') || '3';
         this.elements.dangerousInput.value = localStorage.getItem('dangerousContentThreshold') || '3';
         this.elements.sexualInput.value = localStorage.getItem('sexuallyExplicitThreshold') || '3';
-        this.elements.hateSpeechInput.value = localStorage.getItem('hateSpeechThreshold') || '3'; // Corrected ID
+        this.elements.civicInput.value = localStorage.getItem('civicIntegrityThreshold') || '3';
 
         this.updateDisplayValues();
     }
@@ -153,7 +153,7 @@ class SettingsManager {
         localStorage.setItem('harassmentThreshold', this.elements.harassmentInput.value);
         localStorage.setItem('dangerousContentThreshold', this.elements.dangerousInput.value);
         localStorage.setItem('sexuallyExplicitThreshold', this.elements.sexualInput.value);
-        localStorage.setItem('hateSpeechThreshold', this.elements.hateSpeechInput.value); // Corrected ID
+        localStorage.setItem('civicIntegrityThreshold', this.elements.civicInput.value);
         
         // Update model banner if imported
         if (typeof updateModelBanner === 'function') {
@@ -172,7 +172,7 @@ class SettingsManager {
         this.elements.harassmentValue.textContent = this.getThresholdLabel(this.elements.harassmentInput.value);
         this.elements.dangerousValue.textContent = this.getThresholdLabel(this.elements.dangerousInput.value);
         this.elements.sexualValue.textContent = this.getThresholdLabel(this.elements.sexualInput.value);
-        this.elements.hateSpeechValue.textContent = this.getThresholdLabel(this.elements.hateSpeechInput.value); // Corrected ID
+        this.elements.civicValue.textContent = this.getThresholdLabel(this.elements.civicInput.value);
     }
 
     getThresholdLabel(value) {

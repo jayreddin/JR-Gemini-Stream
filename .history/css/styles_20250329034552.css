@@ -433,7 +433,6 @@ button svg {
     transition: all var(--transition-speed) ease;
     box-shadow: 0 2px 6px var(--shadow-color);
     -webkit-appearance: none; /* Remove default styling on iOS */
-    appearance: none;
 }
 
 .text-input:focus {
@@ -469,269 +468,283 @@ button svg {
     box-shadow: 0 1px 2px var(--shadow-color);
 }
 
-/* Chat history styling */
+/* Add chat history styles */
 .chat-history {
     position: absolute;
     top: 100px;
     left: 20px;
     right: 20px;
-    bottom: 80px; /* Leave space for text input */
+    bottom: 80px;
     overflow-y: auto;
-    padding: 10px;
+    padding: 15px;
     z-index: 5;
-    border-radius: 10px;
-    background-color: rgba(0, 0, 0, 0.2);
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .chat-message {
-    margin-bottom: 12px;
-    padding: 12px;
-    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 12px 16px;
+    border-radius: 12px;
     max-width: 85%;
-    word-wrap: break-word;
-    line-height: 1.4;
+    line-height: 1.5;
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 2px 5px var(--shadow-color);
 }
 
 .user-message {
     background-color: var(--button-bg);
     color: var(--text-color);
     margin-left: auto;
-    border-bottom-right-radius: 0;
+    border-bottom-right-radius: 4px;
+    border-left: 2px solid var(--accent-color);
 }
 
 .model-message {
-    background-color: var(--button-hover);
+    background-color: rgba(76, 175, 80, 0.1);
     color: var(--text-color);
     margin-right: auto;
-    border-bottom-left-radius: 0;
+    border-bottom-left-radius: 4px;
+    border-right: 2px solid var(--accent-color);
 }
 
-.chat-message.streaming {
+.streaming {
     animation: pulse-subtle 2s infinite;
 }
 
-@keyframes pulse-subtle {
-    0% {
-        opacity: 0.9;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0.9;
-    }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Settings dialog and overlay */
-.settings-overlay {
-    position: fixed;
-    top: 0;
+@keyframes pulse-subtle {
+    0% { box-shadow: 0 0 0 rgba(76, 175, 80, 0.4); }
+    50% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.4); }
+    100% { box-shadow: 0 0 0 rgba(76, 175, 80, 0.4); }
+}
+
+.visualizer {
+    position: absolute;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 2000;
-    display: none;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    height: 200px;
+    z-index: 1;
 }
 
-.settings-dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 500px;
-    max-height: 80vh;
-    overflow-y: auto;
-    background-color: var(--bg-color);
+.camera-preview {
+    position: absolute;
+    bottom: 100px;
+    left: 20px;
+    width: 240px; /* Default width */
+    height: 180px;
+    background-color: var(--button-bg);
     border: 1px solid var(--accent-color);
     border-radius: 12px;
-    padding: 20px;
-    z-index: 2001;
-    display: none;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    z-index: 15;
+    display: none; /* Hidden by default */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all var(--transition-speed) ease;
+    transform-origin: bottom left;
+    animation: fadeIn 0.3s ease;
 }
 
-.settings-dialog.active,
-.settings-overlay.active {
-    display: block;
-}
-
-.settings-group {
-    margin-bottom: 15px;
-}
-
-.settings-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.settings-group input[type="text"],
-.settings-group input[type="password"],
-.settings-group input[type="range"],
-.settings-group select,
-.settings-group textarea {
+.camera-preview video {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--button-hover);
-    background-color: var(--button-bg);
-    color: var(--text-color);
-    font-size: 14px;
-    transition: all 0.2s ease;
-    -webkit-appearance: none;
-    appearance: none;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* Mirror the camera for selfie view */
 }
 
-.settings-group input[type="range"] {
-    height: 10px;
-    background: var(--button-hover);
-    outline: none;
-    padding: 0;
-}
-
-.settings-group input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--accent-color);
-    cursor: pointer;
-}
-
-.settings-group input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--accent-color);
-    cursor: pointer;
-    border: none;
-}
-
-.settings-group select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
-    padding-right: 30px;
-}
-
-.settings-group textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-.settings-group input:focus,
-.settings-group select:focus,
-.settings-group textarea:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-}
-
-.collapsible {
-    cursor: pointer;
-    padding: 12px;
-    background-color: var(--button-bg);
-    border-radius: 8px;
-    margin-bottom: 8px;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
-    position: relative;
-}
-
-.collapsible:after {
-    content: "▼";
+.screen-preview {
     position: absolute;
-    right: 12px;
-    transition: transform 0.3s ease;
+    bottom: 300px;
+    left: 20px;
+    width: 240px;
+    height: 135px; /* 16:9 aspect ratio */
+    background-color: var(--button-bg);
+    border: 1px solid var(--accent-color);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 15;
+    display: none; /* Hidden by default */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all var(--transition-speed) ease;
+    transform-origin: bottom left;
+    animation: fadeIn 0.3s ease;
 }
 
-.collapsible.active:after {
-    transform: rotate(180deg);
-}
-
-.collapsible:hover {
-    background-color: var(--button-hover);
-}
-
-.collapsible-content {
-    display: none;
-    padding: 12px;
-    border-left: 2px solid var(--accent-color);
-    margin-left: 5px;
-    margin-bottom: 15px;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 0 8px 8px 0;
-}
-
-.collapsible-content.active {
-    display: block;
-}
-
-.settings-save-btn {
+.screen-preview video {
     width: 100%;
-    padding: 12px;
-    background-color: var(--accent-color);
-    color: var(--text-color);
+    height: 100%;
+    object-fit: contain; /* Maintain aspect ratio without cropping */
+}
+
+/* Add hover effect for previews on desktop */
+@media (hover: hover) {
+    .camera-preview:hover,
+    .screen-preview:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        z-index: 20;
+    }
+}
+
+/* Media query for devices with width less than 340px */
+@media (max-width: 340px) {
+    .camera-preview {
+        width: 180px;
+        right: 25px;
+    }
+    .screen-preview {
+        width: 180px;
+        height: 101px; /* Maintain 16:9 aspect ratio */
+    }
+}
+
+.camera-switch-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
     border: none;
-    border-radius: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 20px;
-    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    z-index: 1000;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    -webkit-tap-highlight-color: transparent;
 }
 
-.settings-save-btn:hover {
-    background-color: #3d8b40;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+.camera-switch-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
 }
 
-.settings-save-btn:active {
-    transform: translateY(0);
+.camera-switch-btn:active {
+    transform: scale(0.95);
 }
 
-/* Mobile optimizations for settings dialog */
-@media screen and (max-width: 768px) {
-    .settings-dialog {
-        width: 95%;
-        padding: 15px;
-        max-height: 85vh;
+/* Hide on desktop */
+@media (hover: hover) and (pointer: fine) {
+    .camera-switch-btn {
+        display: none;
     }
-    
-    .settings-group {
-        margin-bottom: 12px;
+}
+
+/* Additional fixes for very small screens */
+@media screen and (max-width: 480px) {
+    .header-controls {
+        gap: 8px;
+        top: 10px;
+        left: 10px;
     }
-    
-    .settings-group label {
-        font-size: 13px;
+
+    .disconnect-btn, .connect-btn {
+        padding: 6px;
+        width: 36px;
+        height: 36px;
     }
-    
-    .settings-group input, 
-    .settings-group select, 
-    .settings-group textarea {
-        padding: 10px;
+
+    .new-chat-btn {
+        padding: 6px 10px;
+        height: 36px;
+    }
+
+    .new-chat-btn span {
+        display: none; /* Hide "New Chat" text on very small screens */
+    }
+
+    .settings-btn {
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .model-banner {
+        top: 55px;
+        font-size: 10px;
+    }
+
+    /* Adjust chat history for smaller screens */
+    .chat-history {
+        top: 100px;
+        padding: 8px;
+    }
+
+    /* Make control buttons smaller on very small screens */
+    .control-panel {
+        gap: 15px;
+        padding: 8px 5px;
+    }
+
+    .mic-btn, .camera-btn, .screen-btn {
+        width: 44px;
+        height: 44px;
+    }
+
+    /* Optimize text input for very small screens */
+    .text-input-container {
+        padding: 8px;
+        bottom: 10px;
+    }
+
+    .text-input {
         font-size: 14px;
-    }
-    
-    .collapsible {
-        padding: 10px;
-        font-size: 14px;
-    }
-    
-    .collapsible-content {
         padding: 10px;
     }
-    
-    .settings-save-btn {
-        padding: 12px;
-        font-size: 15px;
-        margin-top: 15px;
+
+    .send-btn {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* Optimize for landscape orientation on mobile */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .control-panel {
+        bottom: auto;
+        top: 15px;
+        right: 15px;
+        left: auto;
+        flex-direction: column;
+        width: auto;
+        background: none;
+        border: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .mic-btn, .camera-btn, .screen-btn {
+        margin: 5px 0;
+        width: 40px;
+        height: 40px;
+    }
+
+    .camera-preview, .screen-preview {
+        top: 15px;
+        left: auto;
+        right: 70px;
+        transform: none;
+        width: 160px;
+        height: auto;
+    }
+
+    .chat-history {
+        margin-right: 240px;
+        top: 70px;
+    }
+
+    .text-input-container {
+        right: 70px;
     }
 }

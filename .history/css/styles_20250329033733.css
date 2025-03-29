@@ -1,0 +1,448 @@
+:root {
+    --bg-color: #1a1a1a;
+    --button-bg: #2d2d2d;
+    --button-hover: #3d3d3d;
+    --text-color: #ffffff;
+    --accent-color: #4CAF50;
+    --danger-color: #ff4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Redesign header controls to fix spacing and overlapping */
+.header-controls {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 20px; /* Increased from 15px to 20px */
+    z-index: 1000;
+    width: calc(100% - 100px); /* Make room for the settings button */
+    align-items: center;
+}
+
+.new-chat-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background-color: var(--button-bg);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.new-chat-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+/* Style all SVG icons in buttons */
+button svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Adjust settings button positioning to prevent overlap */
+.settings-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    margin-left: auto; /* Push to the right */
+}
+
+.settings-btn:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+}
+
+/* Update disconnect and connect button styles */
+.disconnect-btn, .connect-btn {
+    position: static;
+    padding: 10px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--button-bg);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.disconnect-btn {
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+.disconnect-btn:hover {
+    background-color: var(--danger-color);
+    color: var(--text-color);
+    transform: scale(1.05);
+}
+
+.connect-btn {
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+
+.connect-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    transform: scale(1.05);
+}
+
+.mic-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--button-bg);
+    border: 2px solid var(--accent-color);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+    position: absolute;
+    bottom: 22px;
+    right: 25px;
+}
+
+.camera-btn,
+.screen-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--button-bg);
+    border: 2px solid var(--accent-color);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+    position: absolute;
+    right: 25px;
+}
+
+.camera-btn {
+    bottom: 142px;
+}
+
+.screen-btn {
+    bottom: 82px;
+}
+
+.camera-btn:hover,
+.screen-btn:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+}
+
+.camera-btn.active,
+.screen-btn.active,
+.mic-btn.active {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 5px var(--accent-color);
+    }
+    50% {
+        box-shadow: 0 0 15px var(--accent-color);
+    }
+    100% {
+        box-shadow: 0 0 5px var(--accent-color);
+    }
+}
+
+.model-banner {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--text-color);
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    z-index: 100;
+}
+
+/* Chat history container */
+.chat-history {
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    right: 20px;
+    bottom: 80px;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 3;
+    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+    scrollbar-width: thin;     /* Firefox */
+}
+
+.chat-history::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-history::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 3px;
+}
+
+.chat-message {
+    padding: 12px 15px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+    line-height: 1.4;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.user-message {
+    background-color: var(--button-bg);
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.model-message {
+    background-color: #333;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+.model-message.streaming {
+    border-left: 3px solid var(--accent-color);
+}
+
+/* Improved mobile layout - especially for touch interfaces */
+@media screen and (max-width: 768px) {
+    /* Header controls for mobile */
+    .header-controls {
+        top: 15px;
+        left: 15px;
+        flex-wrap: wrap;
+        gap: 15px;
+        max-width: calc(100% - 70px); /* Leave space for settings button */
+    }
+    
+    /* Control panel styling - enhanced for better touch interaction */
+    .control-panel {
+        position: fixed;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px; /* Increased gap for better touch targets */
+        padding: 15px 10px;
+        z-index: 10;
+        background-color: rgba(26, 26, 26, 0.7); /* Semi-transparent background */
+        backdrop-filter: blur(5px); /* Blur effect for modern browsers */
+    }
+    
+    /* Make buttons larger and more touch-friendly */
+    .mic-btn, .camera-btn, .screen-btn {
+        position: static;
+        width: 55px;
+        height: 55px;
+        min-width: 55px; /* Ensure minimum size */
+        min-height: 55px; /* Ensure minimum size */
+        border-width: 2px;
+    }
+    
+    /* Make the text input area more touch-friendly */
+    .text-input-container {
+        bottom: 15px;
+        left: 15px;
+        right: 15px; /* Full width on mobile */
+        padding: 0 5px;
+        background-color: rgba(26, 26, 26, 0.7);
+        backdrop-filter: blur(5px);
+        border-radius: 10px;
+    }
+    
+    .text-input {
+        padding: 12px 15px;
+        font-size: 16px; /* Minimum 16px to prevent zoom on iOS */
+        height: 50px;
+    }
+    
+    .send-btn {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+    }
+    
+    /* Chat history improvements for mobile */
+    .chat-history {
+        top: 120px;
+        left: 10px;
+        right: 10px;
+        bottom: 80px;
+        padding: 10px 5px;
+    }
+    
+    .chat-message {
+        max-width: 90%;
+        padding: 10px 12px;
+        font-size: 15px;
+    }
+    
+    /* Adjust settings dialog for better mobile experience */
+    .settings-dialog {
+        width: 92%;
+        max-height: 80vh;
+        padding: 15px;
+    }
+    
+    /* Make collapsible sections more touch-friendly */
+    .collapsible {
+        padding: 12px 15px;
+        font-size: 16px;
+    }
+    
+    /* Increase size of toggle points for sliders */
+    input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
+    }
+    
+    /* Fix iOS specific issues */
+    @supports (-webkit-touch-callout: none) {
+        /* iOS specific styling */
+        .chat-history {
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        
+        /* Prevent white background on inputs in iOS */
+        input, select, textarea {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+    }
+}
+
+/* Additional improvements for very small screens */
+@media screen and (max-width: 480px) {
+    .header-controls {
+        gap: 10px;
+        top: 10px;
+        left: 10px;
+    }
+    
+    .disconnect-btn, .connect-btn, .new-chat-btn {
+        padding: 6px;
+    }
+    
+    .new-chat-btn {
+        padding: 6px 10px;
+    }
+    
+    .new-chat-btn span {
+        display: none; /* Hide "New Chat" text on very small screens */
+    }
+    
+    .settings-btn {
+        top: 10px;
+        right: 10px;
+        width: 38px;
+        height: 38px;
+    }
+    
+    .model-banner {
+        top: 60px;
+    }
+    
+    /* Adjust chat history for smaller screens */
+    .chat-history {
+        top: 90px;
+    }
+    
+    /* Smaller gap between controls on very small screens */
+    .control-panel {
+        gap: 20px;
+        bottom: 70px;
+    }
+    
+    /* Adjust button sizes for very small screens */
+    .mic-btn, .camera-btn, .screen-btn {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        min-height: 48px;
+    }
+}
+
+/* Fix for notched phones like iPhone X and newer */
+@media screen and (max-width: 768px) and (min-height: 650px) {
+    /* Add safe area inset padding to prevent controls from being hidden behind notches/home indicators */
+    .text-input-container {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        bottom: calc(15px + env(safe-area-inset-bottom, 0px));
+    }
+    
+    .control-panel {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    }
+}

@@ -12,9 +12,10 @@ export const settingsTemplate = `
 <div class="settings-group">
     <label for="modelType">Gemini Model</label>
     <select id="modelType">
-        <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
-        <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest</option>
-        <option value="gemini-1.0-pro">gemini-1.0-pro</option>
+        <option value="gemini-2.5-pro">gemini-2.5-pro</option>
+        <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+        <option value="gemini-pro">gemini-pro</option>
+        <option value="gemini-pro-vision">gemini-pro-vision</option>
     </select>
 </div>
 
@@ -90,22 +91,22 @@ export const settingsTemplate = `
         <div class="settings-group">
             <label for="harassmentThreshold">Harassment (0-3)</label>
             <input type="range" id="harassmentThreshold" min="0" max="3" step="1">
-            <span id="harassmentThresholdValue"></span>
+            <span id="harassmentValue"></span>
         </div>
         <div class="settings-group">
             <label for="dangerousContentThreshold">Dangerous Content (0-3)</label>
             <input type="range" id="dangerousContentThreshold" min="0" max="3" step="1">
-            <span id="dangerousContentThresholdValue"></span>
+            <span id="dangerousValue"></span>
         </div>
         <div class="settings-group">
             <label for="sexuallyExplicitThreshold">Sexually Explicit (0-3)</label>
             <input type="range" id="sexuallyExplicitThreshold" min="0" max="3" step="1">
-            <span id="sexuallyExplicitThresholdValue"></span>
+            <span id="sexualValue"></span>
         </div>
         <div class="settings-group">
-            <label for="hateSpeechThreshold">Hate Speech (0-3)</label>
-            <input type="range" id="hateSpeechThreshold" min="0" max="3" step="1">
-            <span id="hateSpeechThresholdValue"></span>
+            <label for="civicIntegrityThreshold">Civic Integrity (0-3)</label>
+            <input type="range" id="civicIntegrityThreshold" min="0" max="3" step="1">
+            <span id="civicValue"></span>
         </div>
     </div>
 </div>
