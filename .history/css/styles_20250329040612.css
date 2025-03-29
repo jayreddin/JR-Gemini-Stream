@@ -1,0 +1,737 @@
+:root {
+    --bg-color: #1a1a1a;
+    --button-bg: #2d2d2d;
+    --button-hover: #3d3d3d;
+    --text-color: #ffffff;
+    --accent-color: #4CAF50;
+    --danger-color: #ff4444;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --transition-speed: 0.2s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    -webkit-font-smoothing: antialiased; /* Better text rendering */
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Flexbox layout for the whole app */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+    width: 100%;
+    overflow: hidden; /* Prevent body scroll */
+}
+
+/* Header styling */
+.header {
+    padding: 15px 20px;
+    background-color: rgba(26, 26, 26, 0.8); /* Slightly transparent */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between; /* Space out controls and banner */
+    align-items: center;
+    flex-shrink: 0; /* Prevent header from shrinking */
+    z-index: 100;
+}
+
+.header-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.new-chat-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.new-chat-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px var(--shadow-color);
+}
+
+/* Style all SVG icons in buttons */
+button svg {
+    width: 18px;
+    height: 18px;
+    pointer-events: none; /* Prevent SVG from capturing clicks */
+}
+
+/* Adjust settings button positioning to prevent overlap */
+.settings-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    z-index: 1000;
+    margin-left: auto; /* Push to the right */
+    box-shadow: 0 2px 4px var(--shadow-color);
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.settings-btn:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.settings-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px var(--shadow-color);
+}
+
+/* Update disconnect and connect button styles */
+.disconnect-btn, .connect-btn {
+    position: static;
+    padding: 10px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--button-bg);
+    border-radius: 8px;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+.disconnect-btn {
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+.disconnect-btn:hover {
+    background-color: var(--danger-color);
+    color: var(--text-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 68, 68, 0.3);
+}
+
+.disconnect-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px var(--shadow-color);
+}
+
+.connect-btn {
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+
+.connect-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.connect-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px var(--shadow-color);
+}
+
+.mic-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--button-bg);
+    border: 2px solid var(--accent-color);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all var(--transition-speed) ease;
+    z-index: 10;
+    position: absolute;
+    bottom: 22px;
+    right: 25px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    will-change: transform, box-shadow; /* Optimize for animations */
+}
+
+.camera-btn,
+.screen-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--button-bg);
+    border: 2px solid var(--accent-color);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all var(--transition-speed) ease;
+    z-index: 10;
+    position: absolute;
+    right: 25px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    will-change: transform, box-shadow; /* Optimize for animations */
+}
+
+.camera-btn {
+    bottom: 142px;
+}
+
+.screen-btn {
+    bottom: 82px;
+}
+
+.mic-btn:hover,
+.camera-btn:hover,
+.screen-btn:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.mic-btn:active,
+.camera-btn:active,
+.screen-btn:active {
+    transform: scale(1);
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.camera-btn.active,
+.screen-btn.active,
+.mic-btn.active {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 5px var(--accent-color);
+        opacity: 0.8;
+    }
+    50% {
+        box-shadow: 0 0 15px var(--accent-color);
+        opacity: 1;
+    }
+    100% {
+        box-shadow: 0 0 5px var(--accent-color);
+        opacity: 0.8;
+    }
+}
+
+/* Reduce animation on devices that prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .camera-btn.active,
+    .screen-btn.active,
+    .mic-btn.active {
+        animation: none;
+        box-shadow: 0 0 8px var(--accent-color);
+    }
+}
+
+.model-banner {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--text-color);
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    z-index: 100;
+    box-shadow: 0 2px 6px var(--shadow-color);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: opacity var(--transition-speed) ease;
+}
+
+/* Mobile layout improvements */
+@media screen and (max-width: 768px) {
+    /* Header controls for mobile */
+    .header-controls {
+        top: 15px;
+        left: 15px;
+        flex-wrap: wrap;
+        gap: 12px;
+        max-width: calc(100% - 70px); /* Leave space for settings button */
+    }
+
+    /* Ensure new chat and disconnect buttons don't overlap */
+    .new-chat-btn {
+        font-size: 13px;
+        padding: 8px 12px;
+        margin-right: 5px;
+    }
+
+    .disconnect-btn, .connect-btn {
+        margin-left: 0;
+        width: 38px;
+        height: 38px;
+    }
+
+    .settings-btn {
+        top: 15px;
+        right: 15px;
+        width: 38px;
+        height: 38px;
+        padding: 8px;
+    }
+
+    /* Control panel styling */
+    .control-panel {
+        position: fixed;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        padding: 10px;
+        z-index: 10;
+        background-color: rgba(26, 26, 26, 0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Adjust positioned buttons for mobile */
+    .mic-btn, .camera-btn, .screen-btn {
+        position: static;
+        width: 48px;
+        height: 48px;
+        margin: 0 5px;
+    }
+
+    /* Model banner positioning for mobile */
+    .model-banner {
+        top: 65px;
+        left: 15px;
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    /* Settings dialog for mobile */
+    .settings-dialog {
+        width: 95%;
+        max-height: 85vh;
+        border-radius: 12px;
+    }
+
+    /* Camera preview adjustments for mobile */
+    .camera-preview, .screen-preview {
+        position: fixed;
+        bottom: auto;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 300px;
+        z-index: 5;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Chat history adjustments for mobile */
+    .chat-history {
+        top: 130px;
+        padding: 10px;
+        margin-bottom: 150px; /* Make room for controls at bottom */
+    }
+
+    /* Text input container for mobile */
+    .text-input-container {
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+        background-color: rgba(26, 26, 26, 0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 10px;
+        border-radius: 12px;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Improve touch targets for mobile */
+    button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+.mic-btn:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+}
+
+.mic-btn.active {
+    background-color: var(--accent-color);
+}
+
+.mic-icon {
+    font-size: 16px;
+}
+
+.text-input-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 100px; /* Leave space for mic button */
+    display: flex;
+    gap: 10px;
+    z-index: 20;
+}
+
+.text-input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--accent-color);
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    font-size: 16px;
+    outline: none;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 2px 6px var(--shadow-color);
+    -webkit-appearance: none; /* Remove default styling on iOS */
+    appearance: none;
+}
+
+.text-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+}
+
+.send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background-color: var(--button-bg);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.send-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.send-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px var(--shadow-color);
+}
+
+/* Chat history styling */
+.chat-history {
+    position: absolute;
+    top: 100px;
+    left: 20px;
+    right: 20px;
+    bottom: 80px; /* Leave space for text input */
+    overflow-y: auto;
+    padding: 10px;
+    z-index: 5;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.chat-message {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    max-width: 85%;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.user-message {
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    margin-left: auto;
+    border-bottom-right-radius: 0;
+}
+
+.model-message {
+    background-color: var(--button-hover);
+    color: var(--text-color);
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+}
+
+.chat-message.streaming {
+    animation: pulse-subtle 2s infinite;
+}
+
+@keyframes pulse-subtle {
+    0% {
+        opacity: 0.9;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.9;
+    }
+}
+
+/* Settings dialog and overlay */
+.settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: none;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.settings-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background-color: var(--bg-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 12px;
+    padding: 20px;
+    z-index: 2001;
+    display: none;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+}
+
+.settings-dialog.active,
+.settings-overlay.active {
+    display: block;
+}
+
+.settings-group {
+    margin-bottom: 15px;
+}
+
+.settings-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.settings-group input[type="text"],
+.settings-group input[type="password"],
+.settings-group input[type="range"],
+.settings-group select,
+.settings-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--button-hover);
+    background-color: var(--button-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.settings-group input[type="range"] {
+    height: 10px;
+    background: var(--button-hover);
+    outline: none;
+    padding: 0;
+}
+
+.settings-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+}
+
+.settings-group input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+    border: none;
+}
+
+.settings-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 30px;
+}
+
+.settings-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.settings-group input:focus,
+.settings-group select:focus,
+.settings-group textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.collapsible {
+    cursor: pointer;
+    padding: 12px;
+    background-color: var(--button-bg);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    position: relative;
+}
+
+.collapsible:after {
+    content: "▼";
+    position: absolute;
+    right: 12px;
+    transition: transform 0.3s ease;
+}
+
+.collapsible.active:after {
+    transform: rotate(180deg);
+}
+
+.collapsible:hover {
+    background-color: var(--button-hover);
+}
+
+.collapsible-content {
+    display: none;
+    padding: 12px;
+    border-left: 2px solid var(--accent-color);
+    margin-left: 5px;
+    margin-bottom: 15px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 0 8px 8px 0;
+}
+
+.collapsible-content.active {
+    display: block;
+}
+
+.settings-save-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: all 0.2s ease;
+}
+
+.settings-save-btn:hover {
+    background-color: #3d8b40;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.settings-save-btn:active {
+    transform: translateY(0);
+}
+
+/* Mobile optimizations for settings dialog */
+@media screen and (max-width: 768px) {
+    .settings-dialog {
+        width: 95%;
+        padding: 15px;
+        max-height: 85vh;
+    }
+    
+    .settings-group {
+        margin-bottom: 12px;
+    }
+    
+    .settings-group label {
+        font-size: 13px;
+    }
+    
+    .settings-group input, 
+    .settings-group select, 
+    .settings-group textarea {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .collapsible {
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .collapsible-content {
+        padding: 10px;
+    }
+    
+    .settings-save-btn {
+        padding: 12px;
+        font-size: 15px;
+        margin-top: 15px;
+    }
+}
