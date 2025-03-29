@@ -5,7 +5,10 @@ import { GoogleSearchTool } from './tools/google-search.js';
 import { ToolManager } from './tools/tool-manager.js';
 import { ChatManager } from './chat/chat-manager.js';
 
-import { setupEventListeners } from './dom/events.js';
+import { setupEventListeners, updateModelBanner } from './dom/events.js';
+
+// Initialize model banner
+updateModelBanner();
 
 const url = getWebsocketUrl();
 const config = getConfig();
@@ -29,6 +32,15 @@ geminiAgent.on('transcription', (transcript) => {
     chatManager.updateStreamingMessage(transcript);
 });
 
+// Add handler for regular text content from the model
+geminiAgent.on('content', (content) => {
+    const textParts = content.modelTurn.parts.filter(part => part.text);
+    if (textParts.length > 0) {
+        const text = textParts.map(part => part.text).join(' ');
+        chatManager.updateStreamingMessage(text);
+    }
+});
+
 geminiAgent.on('text_sent', (text) => {
     chatManager.finalizeStreamingMessage();
     chatManager.addUserMessage(text);
@@ -43,11 +55,6 @@ geminiAgent.on('interrupted', () => {
 
 geminiAgent.on('turn_complete', () => {
     chatManager.finalizeStreamingMessage();
-});
-
-geminiAgent.on('text', (text) => {
-    console.log('text', text);
-    chatManager.updateStreamingMessage(text);
 });
 
 geminiAgent.connect();

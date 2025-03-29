@@ -22,6 +22,9 @@ export class GeminiWebsocketClient extends EventEmitter {
         this.config = config;
         this.isConnecting = false;
         this.connectionPromise = null;
+        this.maxReconnectAttempts = 3;
+        this.reconnectAttempts = 0;
+        this.reconnectDelay = 1000; // Start with 1 second delay
     }
 
     /**
@@ -30,45 +33,132 @@ export class GeminiWebsocketClient extends EventEmitter {
      */
     async connect() {
         if (this.ws?.readyState === WebSocket.OPEN) {
+            console.debug(`${this.name} already has an open connection`);
             return this.connectionPromise;
         }
 
         if (this.isConnecting) {
+            console.debug(`${this.name} connection already in progress`);
             return this.connectionPromise;
         }
 
+        // Reset reconnect attempts when explicitly connecting
+        this.reconnectAttempts = 0;
+        return this._connect();
+    }
+
+    /**
+     * Internal connection method with reconnection logic
+     * @returns {Promise} Resolves when the connection is established and setup is complete
+     * @private
+     */
+    async _connect() {
         console.info('🔗 Establishing WebSocket connection...');
         this.isConnecting = true;
         this.connectionPromise = new Promise((resolve, reject) => {
+            // Clean up any existing connection
+            if (this.ws) {
+                try {
+                    this.ws.onclose = null;
+                    this.ws.onerror = null;
+                    this.ws.onmessage = null;
+                    this.ws.onopen = null;
+                    this.ws.close();
+                } catch (e) {
+                    console.warn('Error while cleaning up existing WebSocket:', e);
+                }
+                this.ws = null;
+            }
+
             const ws = new WebSocket(this.url);
+            
+            // Set a connection timeout
+            const connectionTimeout = setTimeout(() => {
+                console.error(`WebSocket connection timeout after 10 seconds`);
+                if (ws.readyState !== WebSocket.OPEN) {
+                    ws.close();
+                    reject(new Error('Connection timeout'));
+                }
+            }, 10000);
 
             // Send setup message upon successful connection
             ws.addEventListener('open', () => {
                 console.info('🔗 Successfully connected to websocket');
+                clearTimeout(connectionTimeout);
                 this.ws = ws;
                 this.isConnecting = false;
+                this.reconnectAttempts = 0; // Reset on successful connection
 
                 // Configure
-                this.sendJSON({ setup: this.config });
-                console.debug("Setup message with the following configuration was sent:", this.config);
-                resolve();
+                try {
+                    this.sendJSON({ setup: this.config });
+                    console.debug("Setup message with the following configuration was sent:", this.config);
+                    resolve();
+                } catch (error) {
+                    console.error('Error sending setup message:', error);
+                    reject(error);
+                }
             });
 
             // Handle connection errors
             ws.addEventListener('error', (error) => {
-                this.disconnect(ws);
-                const reason = error.reason || 'Unknown';
+                console.error(`WebSocket error event:`, error);
+                clearTimeout(connectionTimeout);
+                
+                // Don't close here, let the onclose handler handle it
+                const reason = error.reason || 'Unknown error';
                 const message = `Could not connect to "${this.url}. Reason: ${reason}"`;
                 console.error(message, error);
-                reject(error);
+                // Only reject if we haven't connected yet
+                if (this.isConnecting) {
+                    reject(error);
+                }
             });
 
             // Listen for incoming messages, expecting Blob data for binary streams
             ws.addEventListener('message', async (event) => {
-                if (event.data instanceof Blob) {
-                    this.receive(event.data);
+                try {
+                    if (event.data instanceof Blob) {
+                        this.receive(event.data);
+                    } else {
+                        console.warn('Non-blob message received:', event);
+                    }
+                } catch (error) {
+                    console.error('Error processing message:', error);
+                }
+            });
+
+            // Handle connection closure
+            ws.addEventListener('close', (event) => {
+                clearTimeout(connectionTimeout);
+                console.warn(`WebSocket connection closed: ${event.code} ${event.reason}`);
+                this.ws = null;
+                
+                // Attempt to reconnect if not manually closed
+                if (!event.wasClean && this.reconnectAttempts < this.maxReconnectAttempts) {
+                    this.reconnectAttempts++;
+                    const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1); // Exponential backoff
+                    console.info(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts}) in ${delay}ms...`);
+                    
+                    setTimeout(() => {
+                        console.info(`Reconnecting now...`);
+                        this.isConnecting = false; // Reset connecting flag for reconnect
+                        this._connect().catch(err => {
+                            console.error('Reconnection failed:', err);
+                        });
+                    }, delay);
                 } else {
-                    console.error('Non-blob message received', event);
+                    this.isConnecting = false;
+                    // Only emit disconnected if we're not trying to reconnect
+                    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+                        console.error(`Maximum reconnection attempts (${this.maxReconnectAttempts}) reached.`);
+                        this.emit('disconnected');
+                    }
+                }
+                
+                // Only reject the promise if we're still in the initial connection phase
+                if (this.isConnecting) {
+                    reject(new Error(`WebSocket closed during connection: ${event.code} ${event.reason}`));
                 }
             });
         });
@@ -76,14 +166,33 @@ export class GeminiWebsocketClient extends EventEmitter {
         return this.connectionPromise;
     }
 
+    /**
+     * Explicitly disconnects the WebSocket.
+     */
     disconnect() {
         if (this.ws) {
-            this.ws.close();
+            // Flag that this is a clean disconnect
+            const ws = this.ws;
             this.ws = null;
             this.isConnecting = false;
             this.connectionPromise = null;
+            
+            try {
+                ws.close(1000, "Disconnected by client");
+            } catch (error) {
+                console.warn(`Error closing WebSocket:`, error);
+            }
+            
             console.info(`${this.name} successfully disconnected from websocket`);
         }
+    }
+
+    /**
+     * Checks if the WebSocket is in a state where it can send messages.
+     * @returns {boolean} True if the connection is ready for sending.
+     */
+    isReady() {
+        return this.ws && this.ws.readyState === WebSocket.OPEN;
     }
 
     /**
@@ -121,14 +230,9 @@ export class GeminiWebsocketClient extends EventEmitter {
                 this.emit('turn_complete');
             }
             if (serverContent.modelTurn) {
-                // Split content into text, audio, and non-audio parts
+                // console.debug(`${this.name} is sending content`);
+                // Split content into audio and non-audio parts
                 let parts = serverContent.modelTurn.parts;
-
-                // Filter out text parts
-                const textParts = parts.filter((p) => p.text);
-                textParts.forEach((p) => {
-                    this.emit('text', p.text);
-                });
 
                 // Filter out audio parts from the model's content parts
                 const audioParts = parts.filter((p) => p.inlineData && p.inlineData.mimeType.startsWith('audio/pcm'));
@@ -191,7 +295,7 @@ export class GeminiWebsocketClient extends EventEmitter {
             clientContent: { 
                 turns: [{
                     role: 'user', 
-                    parts: { text: text } // TODO: Should it be in the list or not?
+                    parts: [{ text: text }]
                 }], 
                 turnComplete: endOfTurn 
             } 
@@ -237,13 +341,28 @@ export class GeminiWebsocketClient extends EventEmitter {
      * 
      * @param {Object} json - The JSON object to send.
      */
-
     async sendJSON(json) {        
         try {
+            // Check if we need to reconnect
+            if (!this.isReady()) {
+                if (!this.isConnecting) {
+                    console.warn('WebSocket not ready, attempting to reconnect...');
+                    await this._connect();
+                } else {
+                    console.debug('WebSocket connection in progress, waiting...');
+                    await this.connectionPromise;
+                }
+            }
+            
+            // Now check again after potential reconnection
+            if (!this.isReady()) {
+                throw new Error('WebSocket is not in OPEN state after reconnection attempt');
+            }
+            
             this.ws.send(JSON.stringify(json));
-            // console.debug(`JSON Object was sent to ${this.name}:`, json);
         } catch (error) {
-            throw new Error(`Failed to send ${json} to ${this.name}:` + error);
+            console.error(`Failed to send to ${this.name}:`, error);
+            throw error; // Rethrow for the caller to handle
         }
     }
 }

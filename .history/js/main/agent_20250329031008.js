@@ -83,11 +83,6 @@ export class GeminiAgent{
     }
 
     setupEventListeners() {
-        // Handle incoming text from the model
-        this.client.on('text', (text) => {
-            this.emit('text', text);
-        });
-
         // Handle incoming audio data from the model
         this.client.on('audio', async (data) => {
             try {
@@ -400,7 +395,18 @@ export class GeminiAgent{
             
             this.initialized = true;
             console.info(`${this.client.name} initialized successfully`);
-            this.client.sendText('.');  // Trigger the model to start speaking first
+            
+            // Ensure the client is ready before sending initial message
+            if (this.client.isReady()) {
+                try {
+                    await this.client.sendText('.', false);  // Send with endOfTurn=false to avoid immediate response
+                } catch (error) {
+                    console.warn('Failed to send initial message, but continuing initialization:', error);
+                    // Continue anyway - this isn't critical
+                }
+            } else {
+                console.warn('WebSocket not ready yet, skipping initial message');
+            }
         } catch (error) {
             console.error('Initialization error:', error);
             throw new Error('Error during the initialization of the client: ' + error.message);
