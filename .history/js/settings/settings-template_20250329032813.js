@@ -12,8 +12,8 @@ export const settingsTemplate = `
 <div class="settings-group">
     <label for="modelType">Gemini Model</label>
     <select id="modelType">
-        <option value="gemini-2.5-pro">gemini-2.5-pro</option>
-        <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+        <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+        <option value="gemini-2.0-flash">gemini-1.5-flash</option>
         <option value="gemini-pro">gemini-pro</option>
         <option value="gemini-pro-vision">gemini-pro-vision</option>
     </select>
