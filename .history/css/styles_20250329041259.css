@@ -616,26 +616,14 @@ button svg {
     }
 
     /* Adjust previews for mobile */
-    .visualizer {
-        width: 100px; /* Smaller visualizer */
-        height: 35px;
-        bottom: 5px;
-        left: 5px;
-    }
-    .camera-preview, .screen-preview {
-        /* display: block; /* Ensure they are shown */
-        width: 100px; /* Smaller previews */
-        top: 5px;
-        right: 5px;
+    .visualizer, .camera-preview, .screen-preview {
+        display: none; /* Hide previews by default on mobile, can be toggled */
+        /* Or adjust positioning/size */
         /* Example:
-        .camera-preview { top: 5px; right: 5px; width: 100px; }
-        .screen-preview { top: calc(5px + (9 / 16 * 100px) + 5px); right: 5px; width: 100px; }
+        .camera-preview { top: 10px; left: 10px; width: 100px; }
+        .screen-preview { top: calc(10px + (9 / 16 * 100px) + 5px); left: 10px; width: 100px; }
         */
     }
-     .screen-preview {
-         top: calc(5px + (9 / 16 * 100px) + 5px); /* Position below smaller camera */
-     }
-
 
     /* Text input fixed at the bottom */
     .text-input-container {
