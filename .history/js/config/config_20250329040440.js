@@ -56,7 +56,10 @@ export const getConfig = () => ({
         {
             "category": "HARM_CATEGORY_HATE_SPEECH",
             "threshold": thresholds[localStorage.getItem('hateSpeechThreshold')] || "HARM_BLOCK_THRESHOLD_UNSPECIFIED"
+        },
+        {
+            "category": "HARM_CATEGORY_CIVIC_INTEGRITY",
+            "threshold": thresholds[localStorage.getItem('civicIntegrityThreshold')] || "HARM_BLOCK_THRESHOLD_UNSPECIFIED"
         }
-        // Removed Civic Integrity
     ]
 });
